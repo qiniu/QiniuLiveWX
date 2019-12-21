@@ -1,0 +1,17 @@
+<view class="page">
+    <view class="page__hd">
+        <view class="page__title">七牛直播与连麦</view>
+        <view class="page__desc">请选择需要测试的项目：</view>
+    </view>
+    <view class="page__bd page__bd_spacing">
+        <button class="push-btn" type="primary" bindtap="bindPush">推流</button>
+      
+
+        <button class="player-btn" type="primary" bindtap="bindPlayer">播放</button>
+        
+
+        <button class="rtc-btn" type="primary" bindtap="bindMeeting">连麦</button>
+        
+    </view>
+</view>
+
