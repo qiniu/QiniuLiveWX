@@ -15,36 +15,8 @@ Page({
   },
   onLoad(query) {
     this.pushContext = wx.createLivePusherContext()
-    this.initRoomWithToken('W4tuC15yTQnEfzlsJs-z-iq-lxQcKjjQpV8_U6QN:4-pJmk8_HseAcAxHHHOECDrJ02k=:eyJhcHBJZCI6ImVoMzgwMzByaCIsInJvb21OYW1lIjoiYW5zd2VyMTciLCJ1c2VySWQiOiJ1c2VyNiIsImV4cGlyZUF0IjoxNTczNTQwNzUzLCJwZXJtaXNzaW9uIjoidXNlciJ9')
+    this.initRoomWithToken('连麦RoomToken')
     return
-    // if (!verifyUserId(userid)) {
-    //   wx.redirectTo({
-    //     url: '/pages/index/index',
-    //     success: () => {
-    //       wx.hideToast()
-    //       wx.showToast({
-    //         title: '用户名最少 3 个字符，并且只能包含字母、数字或下划线',
-    //         icon: 'none',
-    //         duration: 2000
-    //       })
-    //     }
-    //   })
-    //   return;
-    // }
-    // if (!verifyRoomId(room)) {
-    //   wx.redirectTo({
-    //     url: '/pages/index/index',
-    //     success: () => {
-    //       wx.hideToast()
-    //       wx.showToast({
-    //         title: '房间名最少 3 个字符，并且只能包含字母、数字或下划线',
-    //         icon: 'none',
-    //         duration: 2000
-    //       })
-    //     }
-    //   })
-    //   return;
-    // }
     this.appid = appid
     this.roomName = room
     this.userid = userid
@@ -74,81 +46,6 @@ Page({
     } else {
       code = e;
     }
-    // console.log('live-pusher state change: ', code)
-    // switch (code) {
-    //   case 1002:
-    //     {
-    //       console.log('推流成功')
-    //       break
-    //     }
-    //   case -1301:
-    //     {
-    //       console.error('打开摄像头失败: ', code)
-    //       this.leaveRoom()
-    //       break
-    //     }
-    //   case -1302:
-    //     {
-    //       console.error('打开麦克风失败: ', code)
-    //       this.leaveRoom()
-    //       break
-    //     }
-    //   case -1307:
-    //     {
-    //       console.error('推流连接断开: ', code);
-    //       this.leaveRoom()
-    //       break
-    //     }
-    //   case 5000:
-    //     {
-    //       console.log('收到5000: ', code)
-    //       // 收到5000就退房
-    //       this.leaveRoom()
-    //       break
-    //     }
-    //   case 1018:
-    //     {
-    //       console.log('进房成功', code);
-    //       break
-    //     }
-    //   case 1019:
-    //     {
-    //       console.log('退出房间', code)
-    //       this.leaveRoom()
-    //       break
-    //     }
-    //   case 1020:
-    //     {
-    //       console.log('成员列表', code)
-    //       break
-    //     }
-    //   case 1021:
-    //     {
-    //       console.log('网络类型发生变化，需要重新进房', code)
-    //       //先退出房间
-    //       this.leaveRoom()
-    //       break
-    //     }
-    //   case 2007:
-    //     {
-    //       console.log('视频播放loading: ', code)
-    //       break
-    //     };
-    //   case 2004:
-    //     {
-    //       console.log('视频播放开始: ', code)
-    //       break
-    //     };
-    //   default:
-    //     {
-    //     }
-    // }
-    // if (Number(e.detail.code) === -1307) {
-    //   // this.startPush()
-    //   console.error('live-pusher state change:', e.detail.code)
-    // } else {
-    //   console.debug('live-pusher state change:', e.detail.code)
-    // }
   },
   livePusherError(e) {
     if (Number(e.code) < 0) {
@@ -221,9 +118,34 @@ Page({
     }
   },
   startPush() {
+    var session = this.session
     this.pushContext.start({
       success: () => {
         console.log('push success')
+        var mergeJobParam = {
+          id: '1234',
+          publishUrl: '推流地址',
+          w: 720,
+          h: 1280,
+          x: 0,
+          y: 0,
+          fps: 25,
+          kbps: 1000
+        }
+        createMergeJob()
+        function createMergeJob() {
+          session.createMergeJob(mergeJobParam.id, mergeJobParam)
+        }
+        setTimeout(() => {
+          addMergeTracks()
+        }, 2000)
+        function addMergeTracks() {
+          // 获取所有远程媒体流和本地媒体流
+          const allTracks = session.tracks.concat(session.localTracks)
+          const addTracks = allTracks.map((track, idx) => ({ trackid: track.trackid, w: 720, h: 1280, x: 0, y: 0 }))
+          console.log(addTracks)
+          session.addMergeTracks(addTracks, mergeJobParam.id)
+        }
       },
       fail: () => {
         wx.showToast({
