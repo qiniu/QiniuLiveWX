@@ -11,7 +11,7 @@
         enable-camera="{{camera}}"
         min-bitrate="200"
         max-bitrate="400"
-        mode="RTC"
+        mode="live"
         muted="{{!mic}}"
         url="{{publishPath}}"
       >
@@ -29,7 +29,7 @@
         max-cache="0.8"
         id="{{item.key}}"
         src="{{item.url}}"
-        mode="RTC"
+        mode="live"
         muted="{{!volume}}"
         object-fit="fillCrop"
       >
